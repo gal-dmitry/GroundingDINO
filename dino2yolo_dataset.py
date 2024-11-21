@@ -1,4 +1,4 @@
-# python dino2yolo_dataset.py --config_path configs/01_train.yml
+python dino2yolo_dataset.py --config_path configs/01_train.yml
 # python dino2yolo_dataset.py --config_path configs/01_val.yml
 
 # https://www.kdnuggets.com/2023/05/automatic-image-labeling-grounding-dino.html

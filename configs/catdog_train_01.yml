@@ -17,16 +17,15 @@ PREDICT_KWARGS: {
 
 # data kwargs
 MIN_IMAGE_AREA_PERCENTAGE: 0.0
-MAX_IMAGE_AREA_PERCENTAGE: 0.1
+MAX_IMAGE_AREA_PERCENTAGE: 1.0
 APPROXIMATION_PERCENTAGE: 0.0
 
-ROOT: datasets/dino2yolo
-SPLIT: val
+ROOT: datasets/catdog
+SPLIT: train
+
 IMG_DIR: !ref <ROOT>/images/<SPLIT>
 LABELS_DIR: !ref <ROOT>/labels/<SPLIT>
 IMG_EXT: ['jpg', 'jpeg', 'png']
-
-YAML_PATH: !ref <ROOT>/data_.yaml
 
 READ_KWARGS: {
   directory: !ref <IMG_DIR>,
@@ -36,7 +35,7 @@ READ_KWARGS: {
 DATASET_KWARGS: {
   images_directory_path: ~,
   annotations_directory_path: !ref <LABELS_DIR>,
-  data_yaml_path: !ref <YAML_PATH>,
+  data_yaml_path: ~,
   min_image_area_percentage: !ref <MIN_IMAGE_AREA_PERCENTAGE>,
   max_image_area_percentage: !ref <MAX_IMAGE_AREA_PERCENTAGE>,
   approximation_percentage: !ref <APPROXIMATION_PERCENTAGE>,
