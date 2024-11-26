@@ -1,4 +1,4 @@
-# python dino2yolo_dataset.py --config_path configs/emble_21_11_24.yml
+# python dino2yolo_dataset.py --config_path configs/Kolchugino1__2024_11_26__15_13_57.yml
 
 # model kwargs
 GROUNDING_DINO_CONFIG_PATH: groundingdino/config/GroundingDINO_SwinT_OGC.py
@@ -9,7 +9,7 @@ MODEL_KWARGS: {
 }
 
 # classes
-CLASSES: ['person', 'horse', 'other_animal', 'excrements']
+CLASSES: ['person', 'horse', 'other_animal']
 BOX_TRESHOLD: 0.35
 TEXT_TRESHOLD: 0.15
 PREDICT_KWARGS: {
@@ -22,7 +22,8 @@ MIN_IMAGE_AREA_PERCENTAGE: 0.0
 MAX_IMAGE_AREA_PERCENTAGE: 1.0
 APPROXIMATION_PERCENTAGE: 0.0
 
-ROOT: /home/ubuntu/DMITRII/EmbleMLDev3.0/datasets/EmbleObjectDetection/chunk_21_11_24
+CHUNK: Kolchugino1__2024_11_26__15_13_57
+ROOT: !ref /home/ubuntu/DMITRII/EmbleMLDev3.0/datasets/ObjectDetection/<CHUNK>/yolo_<CHUNK>
 SPLIT: train
 
 IMG_DIR: !ref <ROOT>/images/<SPLIT>

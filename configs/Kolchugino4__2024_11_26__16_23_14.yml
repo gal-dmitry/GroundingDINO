@@ -1,0 +1,55 @@
+# python dino2yolo_dataset.py --config_path configs/Kolchugino4__2024_11_26__16_23_14.yml
+
+# model kwargs
+GROUNDING_DINO_CONFIG_PATH: groundingdino/config/GroundingDINO_SwinT_OGC.py
+GROUNDING_DINO_CHECKPOINT_PATH: weights/groundingdino_swint_ogc.pth
+MODEL_KWARGS: {
+  model_config_path: !ref <GROUNDING_DINO_CONFIG_PATH>, 
+  model_checkpoint_path: !ref <GROUNDING_DINO_CHECKPOINT_PATH>,
+}
+
+# classes
+CLASSES: ['person', 'horse', 'other_animal']
+BOX_TRESHOLD: 0.35
+TEXT_TRESHOLD: 0.15
+PREDICT_KWARGS: {
+  box_threshold: !ref <BOX_TRESHOLD>,
+  text_threshold: !ref <TEXT_TRESHOLD>,
+}
+
+# data kwargs
+MIN_IMAGE_AREA_PERCENTAGE: 0.0
+MAX_IMAGE_AREA_PERCENTAGE: 1.0
+APPROXIMATION_PERCENTAGE: 0.0
+
+CHUNK: Kolchugino4__2024_11_26__16_23_14
+ROOT: !ref /home/ubuntu/DMITRII/EmbleMLDev3.0/datasets/ObjectDetection/<CHUNK>/yolo_<CHUNK>
+SPLIT: train
+
+IMG_DIR: !ref <ROOT>/images/<SPLIT>
+LABELS_DIR: !ref <ROOT>/labels/<SPLIT>
+IMG_EXT: ['jpg', 'jpeg', 'png']
+YAML_PATH: !ref <ROOT>/data.yaml
+
+READ_KWARGS: {
+  directory: !ref <IMG_DIR>,
+  extensions: !ref <IMG_EXT>,
+}
+
+DATASET_KWARGS: {
+  images_directory_path: ~,
+  annotations_directory_path: !ref <LABELS_DIR>,
+  data_yaml_path: !ref <YAML_PATH>,
+  min_image_area_percentage: !ref <MIN_IMAGE_AREA_PERCENTAGE>,
+  max_image_area_percentage: !ref <MAX_IMAGE_AREA_PERCENTAGE>,
+  approximation_percentage: !ref <APPROXIMATION_PERCENTAGE>,
+}
+
+# predictor kwargs
+PREDICTOR_KWARGS: {
+  classes: !ref <CLASSES>,
+  model_kwargs: !ref <MODEL_KWARGS>,
+  predict_kwargs: !ref <PREDICT_KWARGS>,
+  read_kwargs: !ref <READ_KWARGS>,
+  dataset_kwargs: !ref <DATASET_KWARGS>,
+}

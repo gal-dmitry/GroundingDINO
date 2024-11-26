@@ -1,0 +1,6 @@
+path: .
+train: images/train
+names:
+  0: person
+  1: horse
+  2: other_animal

@@ -1,6 +1,5 @@
-python dino2yolo_dataset.py --config_path configs/01_train.yml
+# python dino2yolo_dataset.py --config_path configs/01_train.yml
 # python dino2yolo_dataset.py --config_path configs/01_val.yml
-
 # https://www.kdnuggets.com/2023/05/automatic-image-labeling-grounding-dino.html
 
 
@@ -15,6 +14,7 @@ torch.manual_seed(SEED)
 torch.backends.cudnn.benchmark = True
 
 import argparse
+import shutil
 from hyperpyyaml import load_hyperpyyaml
 
 import os
@@ -150,7 +150,6 @@ class DinoPredictor:
       print("done !")
 
 
-
 if __name__ == "__main__":
 
    parser = argparse.ArgumentParser()
@@ -160,5 +159,19 @@ if __name__ == "__main__":
    config = load_args(args.config_path)
    predictor_kwargs = config["PREDICTOR_KWARGS"]
    print(predictor_kwargs)
+
+   # 1. predict
    predictor = DinoPredictor(**predictor_kwargs)
    predictor()
+
+   # 2. add config
+   dir_name = config['ROOT']
+   output_dir = f"{'/'.join(dir_name.split('/')[:-2])}/_archives"
+   output_filename = f"{output_dir}/yolo_{config['CHUNK']}"
+
+   src_cfg = "/home/ubuntu/DMITRII/GroundingDINO/configs/data.yaml"
+   res_cfg = f"{dir_name}/data.yaml"
+   shutil.copy(src_cfg, res_cfg)
+
+   # 3. archive
+   shutil.make_archive(output_filename, 'zip', dir_name)
