@@ -1,33 +1,37 @@
-# python dino2yolo_dataset.py --config_path configs/catdog_train_01.yml
+# python dino2yolo_dataset.py --gdino_args_path configs/catdog_train_01.yml
 
 
 import shutil
 import argparse
-from src.gdino_predictor import DinoPredictor, load_args
+from src.gdino_predictor import load_args, DinoPredictor
 
 
 if __name__ == "__main__":
 
    parser = argparse.ArgumentParser()
    parser.add_argument('--config_path', type=str, required=True)
+   parser.add_argument(
+      '--src_yolo_cfg', 
+      type=str, 
+      default="/home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/configs/data.yaml"
+   )
    args = parser.parse_args()
 
    config = load_args(args.config_path)
+   print(config)
+   
    predictor_kwargs = config["PREDICTOR_KWARGS"]
-   print(predictor_kwargs)
 
-   # 1. predict
+   # 1. predict labels
    predictor = DinoPredictor(**predictor_kwargs)
    predictor()
 
-   # 2. add config
-   dir_name = config['ROOT']
-   output_dir = f"{'/'.join(dir_name.split('/')[:-2])}/_archives"
-   output_filename = f"{output_dir}/yolo_{config['CHUNK']}"
+   # 2. copy yolo config & archive yolo root
+   root, chunk = config['ROOT'], config['CHUNK']
+   zip_dir = f"{'/'.join(root.split('/')[:-2])}/_archives"
+   zip_name = f"{zip_dir}/yolo_{chunk}"
 
-   src_cfg = "/home/ubuntu/DMITRII/GroundingDINO/configs/data.yaml"
-   res_cfg = f"{dir_name}/data.yaml"
-   shutil.copy(src_cfg, res_cfg)
+   res_yolo_cfg = f"{root}/data.yaml"
+   shutil.copy(args.src_yolo_cfg, res_yolo_cfg)
 
-   # 3. archive
-   shutil.make_archive(output_filename, 'zip', dir_name)
+   shutil.make_archive(zip_name, 'zip', root)

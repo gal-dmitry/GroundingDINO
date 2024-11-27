@@ -8,7 +8,7 @@ sys.path.append(
 import torch
 import random
 import numpy as np
-import os
+
 import cv2
 import supervision as svn
 from typing import List
@@ -17,6 +17,11 @@ from hyperpyyaml import load_hyperpyyaml
 from groundingdino.util.inference import Model
 
 
+"""
+Hyperparameters
+"""
+CLASSES = ['cat', 'dog']
+GDINO_ARGS_PATH = "/home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/src/gdino_config_01.yaml"
 
 
 """
@@ -29,62 +34,13 @@ torch.manual_seed(SEED)
 torch.backends.cudnn.benchmark = True
 
 
-
 """
-Hyperparameters
-"""
-# model kwargs
-GROUNDING_DINO_CONFIG_PATH = os.path.join("groundingdino/config/GroundingDINO_SwinT_OGC.py")
-GROUNDING_DINO_CHECKPOINT_PATH = os.path.join("weights/groundingdino_swint_ogc.pth")
-MODEL_KWARGS=dict(
-   model_config_path=GROUNDING_DINO_CONFIG_PATH, 
-   model_checkpoint_path=GROUNDING_DINO_CHECKPOINT_PATH
-)
-
-# classes
-CLASSES = ['cat','dog'] #add the class name to be labeled automatically
-BOX_TRESHOLD = 0.35
-TEXT_TRESHOLD = 0.15
-PREDICT_KWARGS=dict(
-   box_threshold=BOX_TRESHOLD,
-   text_threshold=TEXT_TRESHOLD,
-)
-
-# data kwargs
-MIN_IMAGE_AREA_PERCENTAGE = 0.0
-MAX_IMAGE_AREA_PERCENTAGE = 0.1
-APPROXIMATION_PERCENTAGE = 0.0
-
-ROOT = "datasets/dino2yolo"
-SPLIT = "train"
-IMG_DIR = f"{ROOT}/images/{SPLIT}"
-LABELS_DIR = f"{ROOT}/labels/{SPLIT}"
-YAML_PATH = f"{ROOT}/data.yaml"
-IMG_EXT = ['jpg', 'jpeg', 'png']
-
-READ_KWARGS=dict(
-   directory=IMG_DIR,
-   extensions=IMG_EXT,
-)
-
-DATASET_KWARGS=dict(
-   images_directory_path=None,
-   annotations_directory_path=LABELS_DIR,
-   data_yaml_path=None,
-   min_image_area_percentage=MIN_IMAGE_AREA_PERCENTAGE,
-   max_image_area_percentage=MAX_IMAGE_AREA_PERCENTAGE,
-   approximation_percentage=APPROXIMATION_PERCENTAGE,
-)
-
-
-
-"""
-Predictor
+Utils
 """
 def load_args(config_name):
-    with open(config_name) as file:
-        args = load_hyperpyyaml(file)
-    return args
+   with open(config_name) as file:
+      args = load_hyperpyyaml(file)
+   return args
 
 
 def enhance_class_name(class_names: List[str]) -> List[str]:
@@ -95,26 +51,56 @@ def enhance_class_name(class_names: List[str]) -> List[str]:
    ]
 
 
+def get_dirs(root):
+   split='train'
+   img_dir = f"{root}/images/{split}"
+   labels_dir = f"{root}/labels/{split}"
+   yaml_path = f"{root}/data.yaml"
+   return img_dir, labels_dir, yaml_path
+
+
+def get_gdino_kwargs(
+   root, 
+   gdino_args_path="/home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/src/gdino_config_01.yaml",
+):
+   args = load_args(gdino_args_path)
+   dataset_kwargs = args['DATASET_KWARGS']
+   predict_kwargs = args['PREDICT_KWARGS']
+   model_kwargs = args['MODEL_KWARGS']
+
+   img_dir, labels_dir, _ = get_dirs(root)
+   dataset_kwargs['annotations_directory_path'] = labels_dir
+   read_kwargs = dict(
+      directory=img_dir,
+      extensions=args['IMG_EXT'],
+   )
+
+   return model_kwargs, read_kwargs, predict_kwargs, dataset_kwargs
+
+
+
+"""
+Predictor
+"""
 class DinoPredictor:
    """
    https://www.kdnuggets.com/2023/05/automatic-image-labeling-grounding-dino.html
    """
    def __init__(
       self,
+      root,
       classes=CLASSES,
-      model_kwargs=MODEL_KWARGS,
-      predict_kwargs=PREDICT_KWARGS,
-      read_kwargs=READ_KWARGS,
-      dataset_kwargs=DATASET_KWARGS,
-   ):
+      gdino_args_path=GDINO_ARGS_PATH,
+   ): 
+      
+      model_kwargs, read_kwargs, predict_kwargs, dataset_kwargs = get_gdino_kwargs(root, gdino_args_path)
       self.model = Model(**model_kwargs)
       self.image_paths = svn.list_files_with_extensions(**read_kwargs)
-      print(self.image_paths)
       assert len(self.image_paths) > 0
       self.classes = classes
       self.predict_kwargs = predict_kwargs
       self.dataset_kwargs = dataset_kwargs
-
+   
 
    def predict_dataset(self):
 

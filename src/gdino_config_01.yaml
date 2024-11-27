@@ -1,0 +1,22 @@
+
+# model kwargs
+MODEL_KWARGS: {
+  model_config_path: groundingdino/config/GroundingDINO_SwinT_OGC.py, 
+  model_checkpoint_path: weights/groundingdino_swint_ogc.pth,
+}
+
+# read kwargs
+IMG_EXT: ['jpg', 'jpeg', 'png']
+
+# predict kwargs
+PREDICT_KWARGS: {
+  box_threshold: 0.35,
+  text_threshold: 0.15,
+}
+
+# dataset kwargs
+DATASET_KWARGS: {
+  min_image_area_percentage: 0.0,
+  max_image_area_percentage: 1.0,
+  approximation_percentage: 0.0,
+}
