@@ -1,9 +1,11 @@
 
 # model kwargs
 MODEL_KWARGS: {
-  model_config_path: groundingdino/config/GroundingDINO_SwinT_OGC.py, 
-  model_checkpoint_path: weights/groundingdino_swint_ogc.pth,
+  model_config_path: /home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py, 
+  model_checkpoint_path: /home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/weights/groundingdino_swint_ogc.pth,
+  device: cuda,
 }
+
 
 # read kwargs
 IMG_EXT: ['jpg', 'jpeg', 'png']

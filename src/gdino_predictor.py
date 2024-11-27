@@ -9,6 +9,7 @@ import torch
 import random
 import numpy as np
 
+import os
 import cv2
 import supervision as svn
 from typing import List
@@ -59,14 +60,23 @@ def get_dirs(root):
    return img_dir, labels_dir, yaml_path
 
 
+# def get_model_kwargs(model_kwargs):
+#    prefix = os.getcwd() + '/'
+#    model_kwargs["model_config_path"] = model_kwargs["model_config_path"].replace(prefix, '')
+#    model_kwargs["model_checkpoint_path"] = model_kwargs["model_checkpoint_path"].replace(prefix, '')
+#    print(model_kwargs)
+#    return model_kwargs
+
+
 def get_gdino_kwargs(
    root, 
    gdino_args_path="/home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/src/gdino_config_01.yaml",
 ):
    args = load_args(gdino_args_path)
-   dataset_kwargs = args['DATASET_KWARGS']
-   predict_kwargs = args['PREDICT_KWARGS']
+   # model_kwargs = get_model_kwargs(args['MODEL_KWARGS'])
    model_kwargs = args['MODEL_KWARGS']
+   predict_kwargs = args['PREDICT_KWARGS']
+   dataset_kwargs = args['DATASET_KWARGS']
 
    img_dir, labels_dir, _ = get_dirs(root)
    dataset_kwargs['annotations_directory_path'] = labels_dir
