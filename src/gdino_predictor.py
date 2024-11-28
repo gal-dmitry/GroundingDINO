@@ -57,6 +57,7 @@ def get_dirs(root):
    img_dir = f"{root}/images/{split}"
    labels_dir = f"{root}/labels/{split}"
    yaml_path = f"{root}/data.yaml"
+   print(img_dir, labels_dir)
    return img_dir, labels_dir, yaml_path
 
 
@@ -106,6 +107,7 @@ class DinoPredictor:
       model_kwargs, read_kwargs, predict_kwargs, dataset_kwargs = get_gdino_kwargs(root, gdino_args_path)
       self.model = Model(**model_kwargs)
       self.image_paths = svn.list_files_with_extensions(**read_kwargs)
+      print(self.image_paths)
       assert len(self.image_paths) > 0
       self.classes = classes
       self.predict_kwargs = predict_kwargs

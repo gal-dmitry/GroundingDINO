@@ -1,9 +1,10 @@
-# python dino2yolo_dataset.py --gdino_args_path configs/catdog_train_01.yml
+# python dino2yolo_dataset.py --gdino_args_path configs/<config>
 
 
 import shutil
 import argparse
 from src.gdino_predictor import load_args, DinoPredictor
+TO_CVAT = '_to_cvat'
 
 
 if __name__ == "__main__":
@@ -13,7 +14,7 @@ if __name__ == "__main__":
    parser.add_argument(
       '--src_yolo_cfg', 
       type=str, 
-      default="/home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/configs/data.yaml"
+      default="/home/ubuntu/DMITRII/EmbleMLDev3.0/GroundingDINO/src/data.yaml"
    )
    args = parser.parse_args()
 
@@ -28,7 +29,7 @@ if __name__ == "__main__":
 
    # 2. copy yolo config & archive yolo root
    root, chunk = config['ROOT'], config['CHUNK']
-   zip_dir = f"{'/'.join(root.split('/')[:-2])}/_archives"
+   zip_dir = f"{'/'.join(root.split('/')[:-2])}/{TO_CVAT}"
    zip_name = f"{zip_dir}/yolo_{chunk}"
 
    res_yolo_cfg = f"{root}/data.yaml"
